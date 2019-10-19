@@ -1,0 +1,42 @@
+HONEYPOTS
+Installation of Honeyd tool:
+yum install libevent-devel libedit-devel -y
+https://github.com/DataSoft/Honeyd/
+Clone or Download the software. It will be stored in Downloads directory as Honeydmaster.zip
+cd Downloads
+unzip Honeyd-master.zip
+cd Honeyd-master
+sh autogen.sh
+./configure
+make
+make install
+If you install it in your regular lab, then no need to download during exam time to install.
+Program Code:
+Use vi /etc/honeyd.conf and type the contents below and save it.
+create WindowsXP
+set WindowsXP personality "Microsoft Windows XP Professional SP1"
+set WindowsXP default tcp action reset
+add WindowsXP tcp port 25 "scripts/smtp.pl"
+add WindowsXP tcp port 80 "scripts/web.sh"
+add WindowsXP tcp port 443 "scripts/web.sh"
+bind 192.168.0.205 WindowsXP
+~ Output:
+[root@localhost ~]# vi /etc/honeyd.conf
+[root@localhost ~]# honeyd -f /etc/honeyd.conf
+Honeyd V1.6d Copyright (c) 2002-2007 Niels Provos
+honeyd[2213]: started with -f /etc/honeyd.conf
+honeyd[2213]: listening promiscuously on enp3s0: (arp or ip proto 47
+or (udp and src port 67 and dst port 68) or (ip )) and not ether src
+00:27:0e:13:ea:82
+Honeyd starting as background process
+[root@localhost ~]# 
+Testing
+[root@localhost ~]# nmap -p 25,80,443,1025 192.168.0.205
+Starting Nmap 7.40 ( https://nmap.org ) at 2019-09-18 10:43 IST
+Nmap scan report for 192.168.0.205
+Host is up (0.00012s latency).
+PORT STATE SERVICE
+25/tcp filtered smtp
+80/tcp open http
+443/tcp open https
+1025/tcp filtered NFS-or-IIS
